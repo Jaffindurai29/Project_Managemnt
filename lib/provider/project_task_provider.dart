@@ -1,43 +1,59 @@
 import 'package:flutter/material.dart';
 import '../models/project.dart';
 import '../models/task.dart';
+import '../database/mongodb_data_service.dart';
 
 class ProjectTaskProvider with ChangeNotifier {
-  final List<Project> _projects = [
-    Project(id: '1', name: 'Project Alpha'),
-    Project(id: '2', name: 'Project Beta'),
-    Project(id: '3', name: 'Project Gamma'),
-  ];
+  List<Project> _projects = [];
+  List<Task> _tasks = [];
 
-  final List<Task> _tasks = [
-    Task(id: '1', name: 'Task A', projectId: '1'),
-    Task(id: '2', name: 'Task B', projectId: '2'),
-    Task(id: '3', name: 'Task C', projectId: '3'),
-    Task(id: '4', name: 'Task D', projectId: '1'),
-    Task(id: '5', name: 'Task E', projectId: '2'),
-  ];
+  ProjectTaskProvider() {
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    _projects = await MongoDbDataService().getProjects();
+    _tasks = await MongoDbDataService().getTasks();
+    notifyListeners();
+  }
 
   List<Project> get projects => _projects;
   List<Task> get tasks => _tasks;
 
-  void addProject(Project project) {
-    _projects.add(project);
+  Future<void> addProject(Project project) async {
+    await MongoDbDataService().insertProject(project);
+    await _loadData();
     notifyListeners();
   }
 
-  void addTask(Task task) {
-    _tasks.add(task);
+  Future<void> addTask(Task task) async {
+    await MongoDbDataService().insertTask(task);
+    await _loadData();
     notifyListeners();
   }
 
-  void deleteTask(String id) {
-    _tasks.removeWhere((task) => task.id == id);
+  Future<void> deleteTask(String id) async {
+    await MongoDbDataService().deleteTask(id);
+    await _loadData();
     notifyListeners();
   }
 
-  void deleteProject(String id) {
-    _projects.removeWhere((project) => project.id == id);
-    _tasks.removeWhere((task) => task.projectId == id);
+  Future<void> deleteProject(String id) async {
+    _projects.removeWhere((project) => project.id == id.toString()); // Assuming project id is String
+    _tasks.removeWhere((task) => task.projectId == id.toString()); // Assuming task projectId is String
+    _projects = await MongoDbDataService().getProjects();
+    _tasks = await MongoDbDataService().getTasks();
     notifyListeners();
   }
+
+  // Add methods for updating if needed
+  Future<void> updateProject(Project project) async {
+    await MongoDbDataService().updateProject(project);
+  //   await _loadData(); // Reload all data after update
+    await _loadData();
+  }
+  // Future<void> updateTask(Task task) async {
+  //   await DatabaseHelper().updateTask(task);
+  //   await _loadData(); // Reload all data after update
+  // }
 }

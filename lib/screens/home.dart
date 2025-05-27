@@ -149,7 +149,7 @@ class HomeScreen extends StatelessWidget {
           ),
           trailing: IconButton(
             icon: const Icon(Icons.delete),
-            onPressed: () => provider.deleteTimeEntry(entry.id),
+            onPressed: () => provider.deleteTimeEntry(entry.id as int),
           ),
         );
       },
