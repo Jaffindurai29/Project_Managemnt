@@ -1,4 +1,4 @@
-import 'package:expense_manager/database/database_helper.dart';
+
 import 'package:flutter/material.dart';
 import '../models/time_entry.dart';
 import '../database/mongodb_data_service.dart'; // Import the new service
@@ -26,9 +26,9 @@ class TimeEntryProvider with ChangeNotifier {
   // Note: TimeEntry model likely needs an ID field for deletion.
   // Assuming TimeEntry has an 'id' property of type int.
   Future<void> deleteTimeEntry(int id) async {
-    await DatabaseHelper().deleteTimeEntry(id);
+    await MongoDbDataService().deleteTimeEntry(id as String);
     _entries.removeWhere((entry) => entry.id == id); // Assuming entry has an ID field that maps to MongoDB's _id
-    // _entries = await DatabaseHelper().getTimeEntries(); // Or reload from database
+    // _entries = await MongoDbDataService().getTimeEntries(); // Or reload from database
     notifyListeners();
   }
 }

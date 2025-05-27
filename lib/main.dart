@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await MongoDbService().connect("YOUR_MONGODB_CONNECTION_STRING"); // Connect to MongoDB
+  await MongoDbService().connect("mongodb://localhost:27017/expense_manager_db"); // Connect to MongoDb
   runApp(const MyApp());
 }
 
