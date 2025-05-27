@@ -72,7 +72,7 @@ class _AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
               const SizedBox(height: 20),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Total Time (hours)'),
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 validator: (value) {
                   if (value == null || value.isEmpty) return 'Enter time';
                   if (double.tryParse(value) == null) return 'Invalid number';
